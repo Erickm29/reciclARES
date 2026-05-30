@@ -1,0 +1,31 @@
+# Reglas de Desarrollo - Proyecto Fundares (Synex)
+
+## Arquitectura y Stack
+- **Base de Datos:** Supabase (PostgreSQL) con Realtime activado en `informes` e `informe_residuos`.
+- **Frontend Portales:** React + Vite + Tailwind CSS.
+- **Gráficos:** Recharts.
+- **Mapas:** Leaflet + OpenStreetMap.
+- **Excel:** SheetJS (xlsx).
+- **App Recolector:** HTML/JS puro con sincronización offline.
+
+## Esquema Oficial de la Base de Datos
+SIEMPRE usa estos nombres exactos de tablas y columnas. No inventes campos:
+
+- **afiliados**: `id` (uuid), `nombre`, `nit`, `email`, `telefono`, `creado_at`
+- **recintos**: `id` (uuid), `afiliado_id`, `nombre`, `lat`, `lng`, `radio_m`, `creado_at`
+- **recolectores**: `id` (uuid), `recinto_id`, `nombre`, `codigo_empleado`, `activo` (bool)
+- **tipos_residuo**: `id` (uuid), `nombre`, `detalle`, `kg_esperado_defecto`
+- **informes**: `id` (uuid), `recolector_id`, `recinto_id`, `fecha_hora`, `gps_lat`, `gps_lng`, `gps_precision_m`, `distancia_m`, `dentro_geocerca` (bool), `total_kg`, `foto_url`, `estado`, `creado_at`
+- **informe_residuos**: `id` (uuid), `informe_id`, `tipo_residuo_id`, `kg`
+
+## Vistas de Analítica Disponibles
+Para reportes y dashboards, prioriza el uso de estas vistas en lugar de hacer joins complejos en el cliente:
+- `reporte_diario`
+- `reporte_semanal`
+- `reporte_mensual`
+- `reporte_por_tipo`
+- `reporte_recolector`
+
+## Reglas de Código
+- Todo el código, comentarios e interfaces deben estar en **español**.
+- Para la PWA y el Dashboard, maneja la conexión en tiempo real con Supabase usando `.channel('schema-db-changes')` para las tablas de informes.
