@@ -196,18 +196,26 @@ export async function getCargasForAfiliado(
     );
   }
 
-  // Filtramos directamente en Supabase por afiliado_id
+  // 1. Obtener los recintos pertenecientes al afiliado
+  const { data: recintosData, error: recintosError } = await supabase
+    .from("recintos")
+    .select("id")
+    .eq("afiliado_id", afiliadoId);
+
+  if (recintosError || !recintosData) {
+    console.error("Error fetching recintos for afiliado:", recintosError.message);
+    return [];
+  }
+
+  const recintoIds = recintosData.map((r) => r.id);
+  if (recintoIds.length === 0) return [];
+
+  // 2. Obtener los informes filtrando por los recintos del afiliado
   const { data, error } = await supabase
     .from("informes")
-    .select(`
-      ${INFORME_QUERY}
-    `)
-    .order("fecha_hora", { ascending: false })
-    .filter(
-      "recinto_id",
-      "in",
-      `(select id from recintos where afiliado_id = '${afiliadoId}')`
-    );
+    .select(INFORME_QUERY)
+    .in("recinto_id", recintoIds)
+    .order("fecha_hora", { ascending: false });
 
   if (error) {
     console.error("Error fetching cargas for afiliado:", error.message);
@@ -227,16 +235,27 @@ export async function getCargasValidadasForAfiliado(
     return cargas.filter((c) => c.estado === "Validado");
   }
 
+  // 1. Obtener los recintos pertenecientes al afiliado
+  const { data: recintosData, error: recintosError } = await supabase
+    .from("recintos")
+    .select("id")
+    .eq("afiliado_id", afiliadoId);
+
+  if (recintosError || !recintosData) {
+    console.error("Error fetching recintos for validation:", recintosError.message);
+    return [];
+  }
+
+  const recintoIds = recintosData.map((r) => r.id);
+  if (recintoIds.length === 0) return [];
+
+  // 2. Obtener los informes aprobados para esos recintos
   const { data, error } = await supabase
     .from("informes")
-    .select(`${INFORME_QUERY}`)
+    .select(INFORME_QUERY)
     .eq("estado", "aprobado")
-    .order("fecha_hora", { ascending: false })
-    .filter(
-      "recinto_id",
-      "in",
-      `(select id from recintos where afiliado_id = '${afiliadoId}')`
-    );
+    .in("recinto_id", recintoIds)
+    .order("fecha_hora", { ascending: false });
 
   if (error) {
     console.error("Error fetching cargas validadas for afiliado:", error.message);
