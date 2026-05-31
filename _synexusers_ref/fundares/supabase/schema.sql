@@ -123,14 +123,17 @@ from informes
 group by recinto_id, date_trunc('month', fecha_hora);
 
 -- Desglose por tipo de residuo (para gráficos del dashboard)
-create view reporte_por_tipo as
+create or replace view reporte_por_tipo as
 select i.recinto_id,
-       date_trunc('month', i.fecha_hora)::date as mes,
-       r.tipo,
-       sum(r.kg) as kg
+       tr.id as tipo_residuo_id,
+       tr.nombre as tipo_residuo_nombre,
+       count(distinct i.id) as cantidad_informes,
+       coalesce(sum(ir.kg), 0)::numeric(12,3) as total_kg
 from informes i
-join informe_residuos r on r.informe_id = i.id
-group by i.recinto_id, date_trunc('month', i.fecha_hora), r.tipo;
+join informe_residuos ir on ir.informe_id = i.id
+join tipos_residuo tr on tr.id = ir.tipo_residuo_id
+group by i.recinto_id, tr.id, tr.nombre;
+
 
 -- ============================================================
 --  DATOS DEMO  (coinciden con la app del recolector)

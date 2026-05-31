@@ -1,4 +1,4 @@
-const CACHE = "fundares-v1";
+const CACHE = "fundares-v2";
 const ASSETS = [
   "./",
   "./index.html",
