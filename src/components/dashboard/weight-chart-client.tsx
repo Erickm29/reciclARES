@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { Loader2 } from "lucide-react";
 
 const WeightChartInner = dynamic(
   () =>
@@ -8,7 +9,8 @@ const WeightChartInner = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="fundares-card flex h-80 items-center justify-center rounded-xl border border-border/60 bg-card">
+      <div className="fundares-card flex h-80 flex-col items-center justify-center gap-3">
+        <Loader2 className="size-6 animate-spin text-primary" />
         <p className="text-sm text-muted-foreground">Cargando gráfico...</p>
       </div>
     ),

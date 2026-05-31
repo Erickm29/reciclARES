@@ -12,6 +12,7 @@ import { RejectDialog } from "@/components/cargas/reject-dialog";
 import { StatusBadge } from "@/components/cargas/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Table,
   TableBody,
@@ -83,9 +84,9 @@ export function CargasTable({
 
   return (
     <>
-      <Card className="fundares-card">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+      <Card className="fundares-card overflow-hidden">
+        <CardHeader className="border-b border-border/60 pb-5">
+          <CardTitle className="text-lg">{title}</CardTitle>
           <p className="text-sm text-muted-foreground">
             {filtered.length} registro{filtered.length !== 1 ? "s" : ""}{" "}
             {showOnlyPending ? "pendientes" : "en total"}
@@ -95,7 +96,7 @@ export function CargasTable({
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="hover:bg-transparent">
+                <TableRow className="bg-muted/40 hover:bg-muted/40">
                   <TableHead className="pl-6">Fecha</TableHead>
                   <TableHead>Empresa</TableHead>
                   <TableHead>Recolector ID</TableHead>
@@ -106,29 +107,33 @@ export function CargasTable({
               </TableHeader>
               <TableBody>
                 {filtered.length === 0 ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={6}
-                      className="py-12 text-center text-muted-foreground"
-                    >
-                      No hay cargas para mostrar.
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell colSpan={6}>
+                      <EmptyState
+                        message="No hay cargas para mostrar"
+                        description={
+                          showOnlyPending
+                            ? "Todas las cargas han sido procesadas."
+                            : "Los registros aparecerán aquí cuando estén disponibles."
+                        }
+                      />
                     </TableCell>
                   </TableRow>
                 ) : (
                   filtered.map((carga) => (
                     <TableRow
                       key={carga.id}
-                      className="cursor-pointer transition-colors hover:bg-muted/40"
+                      className="cursor-pointer"
                       onClick={() => openAudit(carga)}
                     >
-                      <TableCell className="pl-6 font-medium">
+                      <TableCell className="pl-6 font-medium text-foreground">
                         {formatDate(carga.fecha)}
                       </TableCell>
                       <TableCell>{carga.empresa}</TableCell>
-                      <TableCell className="font-mono text-sm">
+                      <TableCell className="font-mono text-xs text-muted-foreground">
                         {carga.recolector_id}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right font-medium">
                         {carga.peso_reportado}
                       </TableCell>
                       <TableCell>
@@ -136,7 +141,7 @@ export function CargasTable({
                       </TableCell>
                       <TableCell className="pr-6">
                         <div
-                          className="flex items-center justify-end gap-1"
+                          className="flex items-center justify-end gap-0.5"
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Button
@@ -155,7 +160,7 @@ export function CargasTable({
                                 title="Validar"
                                 disabled={pendingId === carga.id}
                                 onClick={() => handleValidate(carga.id)}
-                                className="hover:bg-emerald-50"
+                                className="hover:bg-accent"
                               >
                                 <Check className="size-4 text-fundares-accent" />
                               </Button>
@@ -164,9 +169,9 @@ export function CargasTable({
                                 size="icon-sm"
                                 title="Rechazar"
                                 onClick={() => openReject(carga.id)}
-                                className="hover:bg-orange-50"
+                                className="hover:bg-destructive/10"
                               >
-                                <AlertTriangle className="size-4 text-fundares-reject" />
+                                <AlertTriangle className="size-4 text-destructive" />
                               </Button>
                             </>
                           )}

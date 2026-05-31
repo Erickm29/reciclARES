@@ -44,51 +44,59 @@ export function AuditDrawer({ carga, open, onOpenChange }: AuditDrawerProps) {
         side="right"
         className="w-full overflow-hidden sm:max-w-xl"
       >
-        <SheetHeader className="border-b border-border/60 pb-4">
-          <SheetTitle className="text-lg font-semibold text-fundares">
-            Ficha Técnica
-          </SheetTitle>
+        <SheetHeader className="border-b border-border/60 px-6 pb-5 pt-2">
+          <SheetTitle className="text-primary">Ficha Técnica</SheetTitle>
           <SheetDescription>
             {carga.empresa} · {carga.recolector_id}
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="h-[calc(100vh-5rem)] pr-4">
-          <div className="space-y-6 py-4">
-            <section className="fundares-card p-4">
-              <div className="mb-3 flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-foreground">
+        <ScrollArea className="h-[calc(100vh-5.5rem)] px-6">
+          <div className="space-y-8 py-6">
+            <section className="fundares-card p-5">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="font-heading text-sm text-foreground">
                   Resumen de la carga
                 </h3>
                 <StatusBadge estado={carga.estado} />
               </div>
-              <dl className="grid grid-cols-2 gap-3 text-sm">
+              <dl className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <dt className="text-muted-foreground">Fecha</dt>
-                  <dd className="font-medium">{formatDate(carga.fecha)}</dd>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Fecha
+                  </dt>
+                  <dd className="mt-1 font-medium">{formatDate(carga.fecha)}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">Material</dt>
-                  <dd className="font-medium">{carga.material ?? "—"}</dd>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Material
+                  </dt>
+                  <dd className="mt-1 font-medium">{carga.material ?? "—"}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">Peso reportado</dt>
-                  <dd className="font-medium">{carga.peso_reportado} kg</dd>
+                  <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Peso reportado
+                  </dt>
+                  <dd className="mt-1 font-medium">{carga.peso_reportado} kg</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">Peso en acopio</dt>
-                  <dd className="font-medium">
+                  <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    Peso en acopio
+                  </dt>
+                  <dd className="mt-1 font-medium">
                     {carga.peso_acopio != null ? `${carga.peso_acopio} kg` : "—"}
                   </dd>
                 </div>
                 {diferencia != null && (
-                  <div className="col-span-2">
-                    <dt className="text-muted-foreground">Diferencia</dt>
+                  <div className="col-span-2 rounded-2xl bg-muted/50 px-4 py-3">
+                    <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Diferencia
+                    </dt>
                     <dd
                       className={
                         Math.abs(diferencia) > 10
-                          ? "font-medium text-fundares-reject"
-                          : "font-medium text-fundares-accent"
+                          ? "mt-1 font-heading text-lg text-destructive"
+                          : "mt-1 font-heading text-lg text-fundares-accent"
                       }
                     >
                       {diferencia > 0 ? "+" : ""}
@@ -99,19 +107,21 @@ export function AuditDrawer({ carga, open, onOpenChange }: AuditDrawerProps) {
               </dl>
               {carga.observaciones && (
                 <>
-                  <Separator className="my-3" />
-                  <div className="flex gap-2 text-sm">
-                    <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-                    <p className="text-muted-foreground">{carga.observaciones}</p>
+                  <Separator className="my-4" />
+                  <div className="flex gap-3 text-sm">
+                    <FileText className="mt-0.5 size-4 shrink-0 text-primary" />
+                    <p className="leading-relaxed text-muted-foreground">
+                      {carga.observaciones}
+                    </p>
                   </div>
                 </>
               )}
             </section>
 
             <section>
-              <div className="mb-3 flex items-center gap-2">
-                <History className="size-4 text-fundares" />
-                <h3 className="text-sm font-semibold">Historial</h3>
+              <div className="mb-4 flex items-center gap-2">
+                <History className="size-4 text-primary" />
+                <h3 className="font-heading text-sm">Historial</h3>
               </div>
               <div className="space-y-3">
                 {(carga.historial ?? []).length === 0 ? (
@@ -122,17 +132,17 @@ export function AuditDrawer({ carga, open, onOpenChange }: AuditDrawerProps) {
                   (carga.historial ?? []).map((entry, index) => (
                     <div
                       key={`${entry.fecha}-${index}`}
-                      className="fundares-card flex gap-3 p-3"
+                      className="fundares-card flex gap-3 p-4"
                     >
-                      <div className="mt-1 size-2 shrink-0 rounded-full bg-fundares" />
+                      <div className="mt-1.5 size-2 shrink-0 rounded-full bg-fundares-accent" />
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-medium">{entry.accion}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="mt-0.5 text-xs text-muted-foreground">
                           {formatDate(entry.fecha)}
                           {entry.usuario ? ` · ${entry.usuario}` : ""}
                         </p>
                         {entry.notas && (
-                          <p className="mt-1 text-xs text-muted-foreground">
+                          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                             {entry.notas}
                           </p>
                         )}
@@ -144,9 +154,9 @@ export function AuditDrawer({ carga, open, onOpenChange }: AuditDrawerProps) {
             </section>
 
             <section>
-              <div className="mb-3 flex items-center gap-2">
-                <ImageIcon className="size-4 text-fundares" />
-                <h3 className="text-sm font-semibold">Fotos de la carga</h3>
+              <div className="mb-4 flex items-center gap-2">
+                <ImageIcon className="size-4 text-primary" />
+                <h3 className="font-heading text-sm">Fotos de la carga</h3>
               </div>
               {(carga.fotos ?? []).length === 0 ? (
                 <p className="text-sm text-muted-foreground">
@@ -157,7 +167,7 @@ export function AuditDrawer({ carga, open, onOpenChange }: AuditDrawerProps) {
                   {(carga.fotos ?? []).map((foto, index) => (
                     <div
                       key={`${foto}-${index}`}
-                      className="overflow-hidden rounded-xl border border-border/60 bg-muted"
+                      className="overflow-hidden rounded-2xl border border-border bg-muted"
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -172,25 +182,25 @@ export function AuditDrawer({ carga, open, onOpenChange }: AuditDrawerProps) {
             </section>
 
             <section>
-              <div className="mb-3 flex items-center gap-2">
-                <PenLine className="size-4 text-fundares" />
-                <h3 className="text-sm font-semibold">Firma del recolector</h3>
+              <div className="mb-4 flex items-center gap-2">
+                <PenLine className="size-4 text-primary" />
+                <h3 className="font-heading text-sm">Firma del recolector</h3>
               </div>
               {carga.firma_url ? (
-                <div className="fundares-card overflow-hidden p-4">
+                <div className="fundares-card overflow-hidden p-5">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={carga.firma_url}
                     alt="Firma del recolector"
                     className="mx-auto h-20 object-contain opacity-80"
                   />
-                  <p className="mt-2 text-center text-xs text-muted-foreground">
+                  <p className="mt-3 text-center text-xs text-muted-foreground">
                     Firma digital · {carga.recolector_id}
                   </p>
                 </div>
               ) : (
-                <div className="fundares-card flex items-center gap-2 p-4 text-sm text-muted-foreground">
-                  <Calendar className="size-4" />
+                <div className="fundares-card flex items-center gap-3 p-5 text-sm text-muted-foreground">
+                  <Calendar className="size-4 shrink-0" />
                   Firma no disponible
                 </div>
               )}

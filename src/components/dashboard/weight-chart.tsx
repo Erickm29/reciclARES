@@ -25,7 +25,7 @@ export function WeightChart({ data }: WeightChartProps) {
   return (
     <Card className="fundares-card">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-semibold text-foreground">
+        <CardTitle className="text-base">
           Peso Reportado vs Peso en Acopio
         </CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -33,45 +33,53 @@ export function WeightChart({ data }: WeightChartProps) {
         </p>
       </CardHeader>
       <CardContent>
-        <div className="h-64 w-full">
+        <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} barGap={4} barCategoryGap="20%">
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5ebe9" vertical={false} />
+            <BarChart data={data} barGap={6} barCategoryGap="24%">
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#DDE2E2"
+                vertical={false}
+              />
               <XAxis
                 dataKey="label"
-                tick={{ fill: "#5c6f6b", fontSize: 12 }}
-                axisLine={{ stroke: "#e5ebe9" }}
+                tick={{ fill: "#6B7280", fontSize: 12 }}
+                axisLine={{ stroke: "#DDE2E2" }}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fill: "#5c6f6b", fontSize: 12 }}
+                tick={{ fill: "#6B7280", fontSize: 12 }}
                 axisLine={false}
                 tickLine={false}
               />
               <Tooltip
                 contentStyle={{
-                  borderRadius: "12px",
-                  border: "1px solid #e5ebe9",
-                  boxShadow: "0 1px 3px rgba(0,103,91,0.06)",
+                  borderRadius: "16px",
+                  border: "1px solid #DDE2E2",
+                  boxShadow: "0 4px 16px rgba(44, 102, 103, 0.08)",
+                  backgroundColor: "#FFFFFF",
+                  color: "#1F2937",
+                  fontSize: 13,
                 }}
                 formatter={(value) => [`${value} kg`, ""]}
+                cursor={{ fill: "rgba(44, 102, 103, 0.04)" }}
               />
               <Legend
-                wrapperStyle={{ fontSize: 12, paddingTop: 12 }}
+                wrapperStyle={{ fontSize: 12, paddingTop: 16 }}
                 formatter={(value) =>
                   value === "reportado" ? "Peso Reportado" : "Peso en Acopio"
                 }
               />
               <Bar
                 dataKey="reportado"
-                fill="#00675B"
-                radius={[6, 6, 0, 0]}
+                fill="#2C6667"
+                radius={[8, 8, 0, 0]}
                 name="reportado"
               />
               <Bar
                 dataKey="acopio"
-                fill="#4CAF50"
-                radius={[6, 6, 0, 0]}
+                fill="#67B34D"
+                radius={[8, 8, 0, 0]}
                 name="acopio"
               />
             </BarChart>

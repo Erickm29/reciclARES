@@ -183,6 +183,69 @@ export async function getRecolectoresResumen() {
   }));
 }
 
+export async function getCargasForAfiliado(
+  afiliadoId: string
+): Promise<TrayectoriaResiduo[]> {
+  const supabase = createServerClient();
+
+  if (!supabase) {
+    // Modo mock: filtrar por nombre del afiliado aproximado
+    const data = getMockStore();
+    return data.filter((c) =>
+      c.empresa.toLowerCase().includes(afiliadoId.toLowerCase())
+    );
+  }
+
+  // Filtramos directamente en Supabase por afiliado_id
+  const { data, error } = await supabase
+    .from("informes")
+    .select(`
+      ${INFORME_QUERY}
+    `)
+    .order("fecha_hora", { ascending: false })
+    .filter(
+      "recinto_id",
+      "in",
+      `(select id from recintos where afiliado_id = '${afiliadoId}')`
+    );
+
+  if (error) {
+    console.error("Error fetching cargas for afiliado:", error.message);
+    return [];
+  }
+
+  return ((data ?? []) as InformeRow[]).map(mapInformeToCarga);
+}
+
+export async function getCargasValidadasForAfiliado(
+  afiliadoId: string
+): Promise<TrayectoriaResiduo[]> {
+  const supabase = createServerClient();
+
+  if (!supabase) {
+    const cargas = await getCargasForAfiliado(afiliadoId);
+    return cargas.filter((c) => c.estado === "Validado");
+  }
+
+  const { data, error } = await supabase
+    .from("informes")
+    .select(`${INFORME_QUERY}`)
+    .eq("estado", "aprobado")
+    .order("fecha_hora", { ascending: false })
+    .filter(
+      "recinto_id",
+      "in",
+      `(select id from recintos where afiliado_id = '${afiliadoId}')`
+    );
+
+  if (error) {
+    console.error("Error fetching cargas validadas for afiliado:", error.message);
+    return [];
+  }
+
+  return ((data ?? []) as InformeRow[]).map(mapInformeToCarga);
+}
+
 export async function getWeightComparisonData() {
   const cargas = await getCargas();
   const recent = cargas.slice(0, 6).reverse();

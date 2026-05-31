@@ -66,7 +66,7 @@ export function RejectDialog({
           onChange={(e) => setNotas(e.target.value)}
           placeholder="Motivo del rechazo (opcional)..."
           rows={4}
-          className="w-full resize-none rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-fundares/30"
+          className="fundares-input resize-none"
         />
         <DialogFooter className="gap-2 sm:gap-0">
           <Button
@@ -77,9 +77,10 @@ export function RejectDialog({
             Cancelar
           </Button>
           <Button
+            variant="destructive"
             onClick={handleReject}
             disabled={isPending}
-            className="bg-fundares-reject text-white hover:bg-fundares-reject/90"
+            className="bg-destructive text-white hover:bg-destructive/90"
           >
             {isPending ? "Rechazando..." : "Confirmar rechazo"}
           </Button>

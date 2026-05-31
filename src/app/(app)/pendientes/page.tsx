@@ -1,5 +1,6 @@
 import { CargasTable } from "@/components/cargas/cargas-table";
 import { PendingWidget } from "@/components/dashboard/pending-widget";
+import { PageHeader } from "@/components/layout/page-header";
 import { getCargas, getPendingCount } from "@/lib/actions/cargas";
 
 export default async function PendientesPage() {
@@ -9,17 +10,13 @@ export default async function PendientesPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-          Pendientes de Validación
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Cargas que requieren revisión y aprobación del validador.
-        </p>
-      </div>
+    <div className="fundares-page">
+      <PageHeader
+        title="Pendientes de Validación"
+        description="Cargas que requieren revisión y aprobación del validador."
+      />
 
-      <div className="mb-8 max-w-sm">
+      <div className="mb-10 max-w-sm">
         <PendingWidget count={pendingCount} />
       </div>
 

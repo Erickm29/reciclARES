@@ -3,17 +3,14 @@ import type { EstadoCarga } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 
 const styles: Record<EstadoCarga, string> = {
-  Pendiente: "bg-amber-50 text-amber-700 border-amber-200",
-  Validado: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  Rechazado: "bg-orange-50 text-orange-700 border-orange-200",
+  Pendiente: "border-amber-200/80 bg-amber-50 text-amber-700",
+  Validado: "border-fundares-accent/30 bg-[#eef7ea] text-fundares-dark",
+  Rechazado: "border-destructive/20 bg-destructive/10 text-destructive",
 };
 
 export function StatusBadge({ estado }: { estado: EstadoCarga }) {
   return (
-    <Badge
-      variant="outline"
-      className={cn("font-medium", styles[estado])}
-    >
+    <Badge variant="outline" className={cn("font-semibold", styles[estado])}>
       {estado}
     </Badge>
   );
