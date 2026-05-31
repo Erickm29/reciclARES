@@ -42,5 +42,5 @@ yarn-error.log*
 next-env.d.ts
 
 # reference folder
-_synexusers_ref/
+# _synexusers_ref/
 
