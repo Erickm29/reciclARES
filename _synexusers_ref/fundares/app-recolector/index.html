@@ -311,7 +311,17 @@ $("#loginBtn").addEventListener("click", async () => {
       .single();
       
     if (error || !r) {
+      console.error("Login database error:", error);
       toast("ID no reconocido");
+      return;
+    }
+    
+    const rec = Array.isArray(r.recintos) ? r.recintos[0] : r.recintos;
+    const afil = rec ? (Array.isArray(rec.afiliados) ? rec.afiliados[0] : rec.afiliados) : null;
+    
+    if (!rec) {
+      console.error("Login error: Recinto structure is null or empty", r);
+      toast("Error: Recinto no asignado");
       return;
     }
     
@@ -319,11 +329,11 @@ $("#loginBtn").addEventListener("click", async () => {
       id: r.id, // UUID
       codigo_empleado: r.codigo_empleado,
       nombre: r.nombre,
-      recinto: r.recintos.nombre,
-      afiliado: r.recintos.afiliados ? r.recintos.afiliados.nombre : "Sin empresa",
-      lat: r.recintos.lat,
-      lng: r.recintos.lng,
-      radio: r.recintos.radio_m
+      recinto: rec.nombre,
+      afiliado: afil ? afil.nombre : "Sin empresa",
+      lat: Number(rec.lat) || 0,
+      lng: Number(rec.lng) || 0,
+      radio: Number(rec.radio_m) || 150
     };
     
     await loadMateriales();
